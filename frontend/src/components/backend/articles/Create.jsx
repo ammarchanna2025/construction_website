@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import Header from "../../common/Header";
-import Footer from "../../common/footer";
+import AdminHeader from "../../common/AdminHeader";
+import Footer from "../../common/Footer";
 import Sidebar from "../../common/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { apiUrl, token } from "../../common/http";
+import { apiUrl, token } from "../../../http";
 import { toast } from "react-toastify";
 import JoditEditor from "jodit-react";
 import { useRef, useMemo, useState } from "react";
@@ -76,121 +76,176 @@ const Create = ({ placeholder }) => {
 
   return (
     <>
-      <Header></Header>
+      <AdminHeader />
       <main>
-        <div className="container my-5">
+        <div className="container-fluid">
           <div className="row">
-            <div className="col-md-3">
+            <div className="col-lg-3">
               <Sidebar />
             </div>
-            <div className="col-md-9">
-              {/* Dashboard */}
-              <div className="card shadow border-0">
-                <div className="card-body p-4">
-                  <div className="d-flex justify-content-between">
-                    <h4 className="h5">Articles / Create</h4>
-                    <Link
-                      to="/admin/projects"
-                      className="btn btn-primary large"
-                    >
-                      Back
-                    </Link>
+            <div className="col-lg-9">
+              <div className="dashboard-content">
+                {/* Page Heading */}
+                <div className="d-sm-flex align-items-center justify-content-between mb-4">
+                  <h1 className="h3 mb-0 text-gray-800">
+                    <i className="bi bi-plus-circle me-2"></i>
+                    Create New Article
+                  </h1>
+                  <Link to="/admin/articles" className="btn btn-secondary">
+                    <i className="bi bi-arrow-left me-2"></i>
+                    Back to Articles
+                  </Link>
+                </div>
+
+                {/* Form Card */}
+                <div className="card shadow mb-4">
+                  <div className="card-header py-3">
+                    <h6 className="m-0 font-weight-bold text-primary">Article Information</h6>
                   </div>
-                  <hr />
+                  <div className="card-body"
+                    style={{
+                      maxHeight: 'calc(100vh - 200px)',
+                      overflowY: 'auto',
+                      padding: '2rem'
+                    }}
+                  >
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label htmlFor="title" className="form-label">
+                              <i className="bi bi-type me-2"></i>Article Title <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              {...register("title", {
+                                required: "The title field is required",
+                              })}
+                              type="text"
+                              className={`form-control ${
+                                errors.title && "is-invalid"
+                              }`}
+                              placeholder="Enter article title"
+                            />
+                            {errors.title && <div className="invalid-feedback">{errors.title?.message}</div>}
+                          </div>
+                        </div>
 
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">
-                        Name
-                      </label>
-                      <input
-                        {...register("title", {
-                          required: "The title field is required",
-                        })}
-                        type="text"
-                        className={`form-control ${
-                          errors.title && "is-invalid"
-                        }`}
-                      />
-                      {errors.title && <p>{errors.title?.message}</p>}
-                    </div>
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label htmlFor="slug" className="form-label">
+                              <i className="bi bi-link me-2"></i>URL Slug <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              {...register("slug", {
+                                required: "The slug field is required",
+                              })}
+                              type="text"
+                              className={`form-control ${
+                                errors.slug && "is-invalid"
+                              }`}
+                              placeholder="article-url-slug"
+                            />
+                            {errors.slug && <div className="invalid-feedback">{errors.slug?.message}</div>}
+                          </div>
+                        </div>
+                      </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">
-                        Slug
-                      </label>
-                      <input
-                        {...register("slug", {
-                          required: "The slug field is required",
-                        })}
-                        type="text"
-                        className={`form-control ${
-                          errors.slug && "is-invalid"
-                        }`}
-                      />
-                      {errors.slug && <p>{errors.slug?.message}</p>}
-                    </div>
+                      <div className="mb-3">
+                        <label htmlFor="author" className="form-label">
+                          <i className="bi bi-person me-2"></i>Author <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          {...register("author", {
+                            required: "The author field is required",
+                          })}
+                          type="text"
+                          className={`form-control ${
+                            errors.author && "is-invalid"
+                          }`}
+                          placeholder="Enter author name"
+                        />
+                        {errors.author && <div className="invalid-feedback">{errors.author?.message}</div>}
+                      </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">
-                        Author
-                      </label>
-                      <input
-                        {...register("author", {
-                          required: "The author field is required",
-                        })}
-                        type="text"
-                        className={`form-control ${
-                          errors.author && "is-invalid"
-                        }`}
-                      />
-                      {errors.author && <p>{errors.author?.message}</p>}
-                    </div>
-                    
-                    
-                    
-                    
-                    
+                      <div className="mb-3">
+                        <label htmlFor="content" className="form-label">
+                          <i className="bi bi-file-text me-2"></i>Content <span className="text-danger">*</span>
+                        </label>
+                        <JoditEditor
+                          ref={editor}
+                          value={content}
+                          config={config}
+                          tabIndex={1}
+                          onBlur={(newContent) => setContent(newContent)}
+                          onChange={(newContent) => {}}
+                        />
+                        <div className="form-text">Write the main content of your article</div>
+                      </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">
-                        Content
-                      </label>
-                      <JoditEditor
-                        ref={editor}
-                        value={content}
-                        config={config}
-                        tabIndex={1} // tabIndex of textarea
-                        onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                        onChange={(newContent) => {}}
-                      />
-                    </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label htmlFor="image" className="form-label">
+                              <i className="bi bi-image me-2"></i>Featured Image
+                            </label>
+                            <input
+                              type="file"
+                              className="form-control"
+                              onChange={handleFile}
+                              accept="image/*"
+                            />
+                            <div className="form-text">Upload a featured image for the article</div>
+                          </div>
+                        </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">Image</label>
-                      <br />
-                      <input type="file" onChange={handleFile}/>
-                    </div>
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label htmlFor="status" className="form-label">
+                              <i className="bi bi-toggle-on me-2"></i>Status
+                            </label>
+                            <select {...register("status")} className="form-select">
+                              <option value="1">Active</option>
+                              <option value="0">Inactive</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="" className="form-label">
-                        Status
-                      </label>
-                      <select {...register("status")} className="form-control">
-                        <option value="1">Active</option>
-                        <option value="0">Block</option>
-                      </select>
-                    </div>
-
-                    <button disabled={isDisable} className="btn btn-primary small">Submit</button>
-                  </form>
+                      {/* Submit Buttons - Fixed at bottom with better spacing */}
+                      <div className="form-actions mt-4 pt-3 border-top">
+                        <div className="d-flex gap-3 justify-content-end">
+                          <Link to="/admin/articles" className="btn btn-secondary">
+                            <i className="bi bi-x-circle me-2"></i>
+                            Cancel
+                          </Link>
+                          <button
+                            disabled={isDisable}
+                            className="btn btn-primary btn-lg"
+                            type="submit"
+                          >
+                            {isDisable ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Creating Article...
+                              </>
+                            ) : (
+                              <>
+                                <i className="bi bi-check-circle me-2"></i>
+                                Create Article
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </main>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 };

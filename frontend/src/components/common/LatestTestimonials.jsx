@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { useState, useEffect } from "react";
-import { apiUrl, fileUrl } from "./http";
+import { apiUrl, fileUrl } from "../../http";
 import StarRate from "../../assets/images/star-fill.svg"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import {Pagination} from 'swiper/modules';

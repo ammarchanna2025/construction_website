@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Header from "../../common/Header";
-import Footer from "../../common/footer";
+import Footer from "../../common/Footer";
 import Sidebar from "../../common/Sidebar";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { apiUrl, token, fileUrl } from "../../common/http";
+import { apiUrl, token, fileUrl } from "../../../http";
 import { toast } from "react-toastify";
 import JoditEditor from "jodit-react";
 import { useRef, useMemo, useState } from "react";

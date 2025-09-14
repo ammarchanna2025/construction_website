@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-key */
 import Header from "../common/Header";
-import Footer from "../common/footer";
+import Footer from "../common/Footer";
 import Hero from "../common/Hero";
 
 import { useState, useEffect } from "react";
-import { apiUrl, fileUrl} from "../common/http";
+import { apiUrl, fileUrl} from "../../http";
 
 const Blogs = () => {
   const [articles, setArticles] = useState([]);

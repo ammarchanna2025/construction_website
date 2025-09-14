@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\Services;
 use App\Models\TempImage;
 use Illuminate\Http\Request;
+use App\Services\TempImageCleanupService;
 
 class ServicesController extends Controller
 {
@@ -99,10 +100,19 @@ class ServicesController extends Controller
 
         if ($tempImage != null) {
             $fileName = $tempImage->name;
+            $cleanupService = new TempImageCleanupService();
 
-            // Save image name to the model
-            $model->image = $fileName;
-            $model->save();
+            // Move temp image to services folder
+            if ($cleanupService->moveImageToPermanentLocation($tempImage, 'services', $fileName)) {
+                // Save image name to the model
+                $model->image = $fileName;
+                $model->save();
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to move image to permanent location!'
+                ]);
+            }
         } else {
             return response()->json([
                 'status' => false,
@@ -244,16 +254,21 @@ class ServicesController extends Controller
         $tempImage = TempImage::find($request->imageId);
 
         if ($tempImage != null) {
-            // Update service image
             $fileName = $tempImage->name;
-            $service->image = $fileName;
-            $service->save();
+            $cleanupService = new TempImageCleanupService();
 
-            // Delete old image if it exists
-            if ($oldImage != '') {
-                $oldImagePath = public_path('uploads/temp/' . $oldImage);
-                if (File::exists($oldImagePath)) {
-                    File::delete($oldImagePath);
+            // Move temp image to services folder
+            if ($cleanupService->moveImageToPermanentLocation($tempImage, 'services', $fileName)) {
+                // Update service image
+                $service->image = $fileName;
+                $service->save();
+
+                // Delete old image if it exists
+                if ($oldImage != '') {
+                    $oldImagePath = public_path('uploads/services/' . $oldImage);
+                    if (File::exists($oldImagePath)) {
+                        File::delete($oldImagePath);
+                    }
                 }
             }
         }

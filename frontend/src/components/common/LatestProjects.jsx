@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { useState, useEffect } from "react";
-import { apiUrl, fileUrl } from "./http";
+import { apiUrl, fileUrl } from "../../http";
 
 
 const LatestProjects = () => {

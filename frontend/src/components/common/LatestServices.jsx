@@ -2,7 +2,7 @@
 
 
 import { useState, useEffect } from "react";
-import { apiUrl, fileUrl } from "./http";
+import { apiUrl, fileUrl } from "../../http";
 
 const LatestServices = () => {
   const [services, setservices] = useState([]);
@@ -49,7 +49,7 @@ const LatestServices = () => {
                             {service.short_desc}
                           </p>
                         </div>
-                        <a href="#" className="btn btn-primary small">
+                        <a href="/services" className="btn btn-primary small">
                           Read More
                         </a>
                       </div>

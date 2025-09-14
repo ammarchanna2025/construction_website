@@ -10,6 +10,8 @@ use App\Http\Controllers\front\FrontServiceController;
 use App\Http\Controllers\front\FrontProjectController;
 use App\Http\Controllers\front\FrontArticleController;
 use App\Http\Controllers\front\FrontTestimonialController;
+use App\Http\Controllers\front\FrontMemberController;
+use App\Http\Controllers\admin\MembersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,9 @@ Route::get('get-latest-articles',[FrontArticleController::class,'latestArticles'
 
 Route::get('get-testimonials',[FrontTestimonialController::class,'index']);
 Route::get('get-latest-testimonials',[FrontTestimonialController::class,'latestTestimonials']);
+
+Route::get('get-members',[FrontMemberController::class,'index']);
+Route::get('get-latest-members',[FrontMemberController::class,'latestMembers']);
 
 
 
@@ -67,8 +72,15 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
      Route::get('testimonials/{id}',[TestimonialsController::class,'show']);
      Route::delete('testimonials/{id}',[TestimonialsController::class,'destroy']);
 
+     //Members
+     Route::post('members',[MembersController::class,'store']);
+     Route::get('members',[MembersController::class,'index']);
+     Route::put('members/{id}',[MembersController::class,'update']);
+     Route::get('members/{id}',[MembersController::class,'show']);
+     Route::delete('members/{id}',[MembersController::class,'destroy']);
 
     Route::post('temp-images',[TempImageController::class,'store']);
+    Route::post('temp-images/cleanup',[TempImageController::class,'cleanup']);
 
 
 
