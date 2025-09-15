@@ -1,15 +1,14 @@
-# Railway build configuration for Laravel + MySQL
-
 [build]
 builder = "nixpacks"
 
 [phases.setup]
-# Install PHP 8.2, Composer, and Node.js (for npm run build if needed)
-nixPkgs = ["php82", "composer", "nodejs"]
+# Force install PHP & Composer
+nixPkgs = ["php82", "composer"]
 
 [phases.build]
 cmds = [
   "composer install --no-dev --optimize-autoloader",
+  "php artisan key:generate --force",
   "php artisan config:clear",
   "php artisan cache:clear",
   "php artisan route:clear",
@@ -17,5 +16,4 @@ cmds = [
 ]
 
 [start]
-# Run Laravel on the Railway PORT
 cmd = "php artisan serve --host 0.0.0.0 --port $PORT"
